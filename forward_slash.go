@@ -8,16 +8,19 @@ import (
 	"strings"
 )
 
+// Config the plugin configuration
 type Config struct {
 	Permanent bool `json:"permanent,omitempty"`
 }
 
+// CreateConfig creates a base configuration
 func CreateConfig() *Config {
 	return &Config{
 		Permanent: false,
 	}
 }
 
+// ForwardSlash the main plugin
 type ForwardSlash struct {
 	Next       http.Handler
 	Permanent  bool
@@ -25,7 +28,8 @@ type ForwardSlash struct {
 	InfoLogger *log.Logger
 }
 
-func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
+// New creates a new ForwardSlash plugin
+func New(_ context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
 	infoLogger := log.Default()
 
 	return &ForwardSlash{
@@ -36,6 +40,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 	}, nil
 }
 
+// IsFile checks whether a given path is a file
 func (a *ForwardSlash) IsFile(relativePath string) bool {
 	// Clean the path to handle cases like "/test/../file.jpg"
 	cleanedPath := filepath.Clean(relativePath)
@@ -49,24 +54,20 @@ func (a *ForwardSlash) IsFile(relativePath string) bool {
 }
 
 func (a *ForwardSlash) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if strings.HasSuffix(req.URL.Path, "/") {
-		a.InfoLogger.Printf("Path has final '/': %s", req.URL.Path)
+	if strings.HasSuffix(req.URL.Path, "/") || a.IsFile(req.URL.Path) {
+		a.InfoLogger.Printf("Path has final '/' or is a file: %s", req.URL.Path)
 		a.Next.ServeHTTP(rw, req)
 	} else {
-		if a.IsFile(req.URL.Path) {
-			a.InfoLogger.Printf("Path is a file: %s", req.URL.Path)
-			a.Next.ServeHTTP(rw, req)
-		} else {
-			req.URL.Path += "/"
-			if req.URL.RawQuery != "" {
-				req.URL.Path += "?" + req.URL.RawQuery
-			}
-			if a.Permanent {
-				http.Redirect(rw, req, req.URL.Path, http.StatusMovedPermanently)
-			} else {
-				http.Redirect(rw, req, req.URL.Path, http.StatusFound)
-			}
+		req.URL.Path += "/"
+		if req.URL.RawQuery != "" {
+			req.URL.Path += "?" + req.URL.RawQuery
 		}
+		if a.Permanent {
+			http.Redirect(rw, req, req.URL.Path, http.StatusMovedPermanently)
+		} else {
+			http.Redirect(rw, req, req.URL.Path, http.StatusFound)
+		}
+
 	}
 
 }
