@@ -56,6 +56,8 @@ linters:
     - wrapcheck
     - noctx
     - lll
+    - revive
+    - stylecheck
     - forbidigo
     - varnamelen
     - wastedassign # is disabled because of generics
