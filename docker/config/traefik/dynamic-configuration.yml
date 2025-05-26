@@ -1,0 +1,10 @@
+http:
+  middlewares:
+    permanent-redirect:
+      plugin:
+        forward-slash-redirector:
+          permanent: true
+    temporary-redirect:
+      plugin:
+        forward-slash-redirector:
+          permanent: false

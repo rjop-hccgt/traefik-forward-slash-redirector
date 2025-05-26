@@ -1,0 +1,21 @@
+services:
+  traefik:
+    image: traefik
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/config/traefik/traefik.yml:/etc/traefik/traefik.yml
+      - ./docker/config/traefik/dynamic-configuration.yml:/etc/traefik/dynamic-configuration.yml
+      - ./:/plugins-local/src/github.com/rjop-hccgt/traefik-forward-slash-redirector
+
+    ports:
+      - "80:80"
+
+  hello:
+    image: containous/whoami
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.hello.entrypoints=http
+      - traefik.http.routers.hello.rule=PathPrefix(`/`)
+      - traefik.http.services.hello.loadbalancer.server.port=80
+      - traefik.http.routers.hello.middlewares=temporary-redirect@file
