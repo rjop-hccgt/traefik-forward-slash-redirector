@@ -1,4 +1,4 @@
-package traefik_forward_slash_redirector //nolint:revive
+package traefik_forward_slash_redirector //nolint:revive,stylecheck
 
 import (
 	"context"
@@ -68,7 +68,5 @@ func (a *ForwardSlash) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		} else {
 			http.Redirect(rw, req, req.URL.Path, http.StatusFound)
 		}
-
 	}
-
 }
