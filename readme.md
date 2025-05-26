@@ -1,7 +1,7 @@
 This repository includes traefik plugin which will add a final forward slash to a URL if not present. It will do a
 temporary (HTTP 302 Found) or permanent (HTTP 301 Moved Permanently) redirect.
 
-[![Build Status](https://github.com/rjop-hccgt/traefik-forward-slash-redirector/workflows/Main/badge.svg?branch=master)](https://github.com/rjop-hccgt/traefik-forward-slash-redirector/actions)
+[![Main](https://github.com/rjop-hccgt/traefik-forward-slash-redirector/actions/workflows/main.yml/badge.svg)](https://github.com/rjop-hccgt/traefik-forward-slash-redirector/actions/workflows/main.yml)
 
 ## Usage
 
