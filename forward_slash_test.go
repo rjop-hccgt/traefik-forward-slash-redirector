@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 
@@ -12,7 +13,7 @@ import (
 )
 
 func TestForwardSlash_isFile(_ *testing.T) {
-	infoLogger := log.Default()
+	infoLogger := log.New(os.Stdout, "ForwardSlash: ", log.Ldate|log.Ltime)
 	redirector := &traefikforwardslashredirector.ForwardSlash{
 		InfoLogger: infoLogger,
 	}
