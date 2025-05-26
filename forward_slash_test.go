@@ -1,4 +1,4 @@
-package traefik_forward_slash_redirector_test
+package traefik_forward_slash_redirector_test //nolint:revive
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestForwardSlash_isFile(t *testing.T) {
+func TestForwardSlash_isFile(_ *testing.T) {
 	infoLogger := log.Default()
 	redirector := &traefikforwardslashredirector.ForwardSlash{
 		InfoLogger: infoLogger,
@@ -32,7 +32,7 @@ func TestForwardSlash_ServeHTTPPermanent(t *testing.T) {
 	cfg := traefikforwardslashredirector.CreateConfig()
 	cfg.Permanent = true
 	ctx := context.Background()
-	next := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {})
+	next := http.HandlerFunc(func(_ http.ResponseWriter, req *http.Request) {})
 	handler, err := traefikforwardslashredirector.New(ctx, next, cfg, "forward-slash-redirector-test")
 	if err != nil {
 		t.Fatal(err)
@@ -72,7 +72,7 @@ func TestForwardSlash_ServeHTTPTemporary(t *testing.T) {
 	cfg := traefikforwardslashredirector.CreateConfig()
 	cfg.Permanent = false
 	ctx := context.Background()
-	next := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {})
+	next := http.HandlerFunc(func(_ http.ResponseWriter, req *http.Request) {})
 	handler, err := traefikforwardslashredirector.New(ctx, next, cfg, "forward-slash-redirector-test")
 	if err != nil {
 		t.Fatal(err)

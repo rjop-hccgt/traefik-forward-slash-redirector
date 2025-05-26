@@ -1,26 +1,27 @@
-package traefik_forward_slash_redirector
+package traefik_forward_slash_redirector //nolint:revive
 
 import (
 	"context"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 )
 
-// Config the plugin configuration
+// Config the plugin configuration.
 type Config struct {
 	Permanent bool `json:"permanent,omitempty"`
 }
 
-// CreateConfig creates a base configuration
+// CreateConfig creates a base configuration.
 func CreateConfig() *Config {
 	return &Config{
 		Permanent: false,
 	}
 }
 
-// ForwardSlash the main plugin
+// ForwardSlash the main plugin.
 type ForwardSlash struct {
 	Next       http.Handler
 	Permanent  bool
@@ -28,9 +29,9 @@ type ForwardSlash struct {
 	InfoLogger *log.Logger
 }
 
-// New creates a new ForwardSlash plugin
+// New creates a new ForwardSlash plugin.
 func New(_ context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
-	infoLogger := log.Default()
+	infoLogger := log.New(os.Stdout, "ForwardSlash: ", log.Ldate|log.Ltime)
 
 	return &ForwardSlash{
 		Permanent:  config.Permanent,
@@ -40,7 +41,7 @@ func New(_ context.Context, next http.Handler, config *Config, name string) (htt
 	}, nil
 }
 
-// IsFile checks whether a given path is a file
+// IsFile checks whether a given path is a file.
 func (a *ForwardSlash) IsFile(relativePath string) bool {
 	// Clean the path to handle cases like "/test/../file.jpg"
 	cleanedPath := filepath.Clean(relativePath)
